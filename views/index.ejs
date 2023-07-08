@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Películas y Series</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <h1>Películas y Series</h1>
+    <div class="card-grid">
+      <% for (let i = 0; i < seriesNames.length; i++) { %>
+      <a href="/series/<%= seriesNames[i] %>" class="card">
+        <%= seriesNames[i] %>
+      </a>
+      <% } %>
+    </div>
+  </body>
+</html>

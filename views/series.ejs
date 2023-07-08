@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/series.css" />
+    <title><%= seriesName %></title>
+  </head>
+  <body>
+    <h1><%= seriesName %></h1>
+
+    <% if (seasons && seasons.length > 0) { %>
+    <div class="card-grid">
+      <% for (let i = 0; i < seasons.length; i++) { %>
+      <div class="card">
+        <div class="card-header">Temporada: <%= seasons[i] %></div>
+        <div class="card-body">
+          <a
+            href="/series/<%= seriesName %>/<%= encodeURIComponent(seasons[i]) %>"
+            class="btn btn-primary"
+            >Ver videos</a
+          >
+        </div>
+      </div>
+      <% } %>
+    </div>
+    <% } else { %>
+    <p>No hay temporadas disponibles para esta serie.</p>
+    <% } %>
+
+    <script src="../public/js/bootstrap.min.js"></script>
+  </body>
+</html>
