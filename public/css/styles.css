@@ -2,6 +2,7 @@ body {
   background-color: #f5f5f5;
   font-family: Arial, sans-serif;
   padding: 20px;
+  max-height: 100%;
 }
 
 h1 {
@@ -15,20 +16,101 @@ h1 {
 }
 
 .card {
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 1px solid #cccccc;
-  color: #333333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 200px;
+  text-align: center;
   margin: 10px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
 }
 
 .card:hover {
   background-color: #e6e6e6;
+}
+
+.portada {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.card {
+  text-decoration: none;
+}
+
+.card:hover {
+  transform: rotate(90);
+}
+
+.button-6 {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.button-6:hover,
+.button-6:focus {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.button-6:hover {
+  transform: translateY(-1px);
+}
+
+.button-6:active {
+  background-color: #F0F0F1;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: rgba(0, 0, 0, 0.65);
+  transform: translateY(0);
+}
+
+header {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+/* Estilos para el contenedor del campo de búsqueda */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Ajusta la altura según tus necesidades */
+  background-color: #f0f0f0;
+  /* Color de fondo */
+}
+
+/* Estilos para el campo de búsqueda */
+#searchInput {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 300px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+/* Cambio de color del borde cuando se enfoca */
+#searchInput:focus {
+  border-color: #007bff;
 }

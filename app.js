@@ -12,20 +12,38 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Ruta para obtener todas las películas y series
+// Ruta para obtener todas las películas y series
 app.get("/", (req, res) => {
-  // Leer las carpetas de la ruta especificada
   fs.readdir(seriesPath, { withFileTypes: true }, (err, entries) => {
     if (err) {
       console.error(err);
       res.status(500).send("Error al leer la carpeta de series");
     } else {
-      // Filtrar solo las carpetas (peliculas y series)
       const seriesFolders = entries.filter((entry) => entry.isDirectory());
-
-      // Obtener los nombres de las películas y series
       const seriesNames = seriesFolders.map((folder) => folder.name);
 
-      res.render("index", { seriesNames });
+      // Cargar las rutas completas de las portadas desde un archivo JSON
+      fs.readFile("portadas.json", "utf8", (err, data) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error al leer el archivo de portadas");
+        } else {
+          const portadas = JSON.parse(data).series;
+
+          // Verificar si existen portadas para todas las series
+          const seriesCoverPaths = seriesNames.map((seriesName) => {
+            const portada = portadas.find((p) => p.nombre === seriesName);
+            if (portada) {
+              return portada.ruta;
+            } else {
+              // Ruta de imagen de reemplazo si no se encuentra la portada
+              return "/images/default-cover.png";
+            }
+          });
+
+          res.render("index", { seriesNames, seriesCoverPaths });
+        }
+      });
     }
   });
 });

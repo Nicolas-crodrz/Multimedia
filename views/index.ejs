@@ -6,13 +6,48 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <h1>Películas y Series</h1>
-    <div class="card-grid">
-      <% for (let i = 0; i < seriesNames.length; i++) { %>
-      <a href="/series/<%= seriesNames[i] %>" class="card">
-        <%= seriesNames[i] %>
-      </a>
-      <% } %>
-    </div>
+    <header>
+      <h1>Películas y Series</h1>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          name="query"
+          placeholder="Buscar serie..."
+        />
+      </div>
+    </header>
+    <main class="container">
+      <div class="card-grid" id="seriesContainer">
+        <!-- Sección para mostrar las series -->
+        <% for (let i = 0; i < seriesNames.length; i++) { %>
+        <a href="/series/<%= seriesNames[i] %>" class="card serie-card">
+          <img
+            class="portada"
+            src="<%= seriesCoverPaths[i] %>"
+            alt="<%= seriesNames[i] %>"
+          />
+          <p class="button-6" role="button"><%=seriesNames[i]%></p>
+        </a>
+        <% } %>
+      </div>
+    </main>
+    <script>
+      const searchInput = document.getElementById("searchInput");
+      const seriesCards = document.querySelectorAll(".serie-card");
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+
+        seriesCards.forEach((card) => {
+          const seriesName = card.querySelector("p").textContent.toLowerCase();
+          if (seriesName.includes(query)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    </script>
   </body>
 </html>
