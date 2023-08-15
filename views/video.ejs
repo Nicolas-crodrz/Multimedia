@@ -3,12 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <title>Visualización de Video</title>
+    <link href="https://vjs.zencdn.net/7.11.8/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.11.8/video.min.js"></script>
   </head>
   <body>
     <h1>Visualización de Video</h1>
 
-    <video width="640" height="480" controls>
+    <video
+      id="videoPlayer"
+      class="video-js vjs-default-skin"
+      controls
+      preload="auto"
+      width="640"
+      height="480"
+    >
       <source src="<%= videoPath %>" type="video/mp4" />
     </video>
+    <h2><%= videoPath %></h2>
+    <script>
+      const player = videojs("videoPlayer");
+    </script>
   </body>
 </html>
