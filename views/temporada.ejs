@@ -2,12 +2,15 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="../public/css/bootstrap.min.css" />
+    <link
+      rel="shortcut icon"
+      href="/public/img/favicon/favicon.ico"
+      type="image/x-icon"
+    />
     <title><%= seriesName %> - Temporada <%= season %></title>
   </head>
   <body>
     <h1><%= seriesName %> - Temporada <%= season %></h1>
-
     <% if (videos && videos.length > 0) { %>
     <div class="video-list">
       <% for (let i = 0; i < videos.length; i++) { %>
@@ -23,7 +26,5 @@
     <% } else { %>
     <p>No hay videos disponibles para esta temporada.</p>
     <% } %>
-
-    <script src="../public/js/bootstrap.min.js"></script>
   </body>
 </html>

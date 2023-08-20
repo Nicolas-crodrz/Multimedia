@@ -11,7 +11,55 @@ const seriesPath = "H:/Series"; // Ruta de la carpeta de series
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Ruta para obtener todas las películas y series
+// Función para obtener todos los archivos de video en una carpeta y sus subcarpetas
+const getVideoFiles = (folderPath, callback) => {
+  fs.readdir(folderPath, { withFileTypes: true }, (err, entries) => {
+    if (err) {
+      callback(err, null);
+      return;
+    }
+
+    const files = [];
+    const folders = [];
+
+    entries.forEach((entry) => {
+      if (entry.isFile()) {
+        const fileExtension = path.extname(entry.name).toLowerCase();
+        if ([".mkv", ".mp4", ".webm"].includes(fileExtension)) {
+          files.push(entry.name);
+        }
+      } else if (entry.isDirectory()) {
+        folders.push(entry.name);
+      }
+    });
+
+    let completed = 0;
+    if (folders.length > 0) {
+      const seasonFolders = [];
+      folders.forEach((folder) => {
+        const subFolderPath = path.join(folderPath, folder);
+        getVideoFiles(subFolderPath, (err, subFiles, subFolders) => {
+          if (err) {
+            callback(err, null);
+            return;
+          }
+
+          files.push(...subFiles);
+          folders.push(...subFolders);
+          completed++;
+          if (completed === folders.length) {
+            callback(null, files, folders, seasonFolders);
+          }
+        });
+
+        seasonFolders.push(folder);
+      });
+    } else {
+      callback(null, files, folders, []);
+    }
+  });
+};
+
 // Ruta para obtener todas las películas y series
 app.get("/", (req, res) => {
   fs.readdir(seriesPath, { withFileTypes: true }, (err, entries) => {
@@ -52,55 +100,6 @@ app.get("/", (req, res) => {
 app.get("/series/:name", (req, res) => {
   const seriesName = req.params.name;
   const seriesFolderPath = path.join(seriesPath, seriesName);
-
-  // Función recursiva para obtener todos los archivos de video en una carpeta y sus subcarpetas
-  const getVideoFiles = (folderPath, callback) => {
-    fs.readdir(folderPath, { withFileTypes: true }, (err, entries) => {
-      if (err) {
-        callback(err, null);
-        return;
-      }
-
-      const files = [];
-      const folders = [];
-
-      entries.forEach((entry) => {
-        if (entry.isFile()) {
-          const fileExtension = path.extname(entry.name).toLowerCase();
-          if ([".mkv", ".mp4", ".webm"].includes(fileExtension)) {
-            files.push(entry.name);
-          }
-        } else if (entry.isDirectory()) {
-          folders.push(entry.name);
-        }
-      });
-
-      let completed = 0;
-      if (folders.length > 0) {
-        const seasonFolders = [];
-        folders.forEach((folder) => {
-          const subFolderPath = path.join(folderPath, folder);
-          getVideoFiles(subFolderPath, (err, subFiles, subFolders) => {
-            if (err) {
-              callback(err, null);
-              return;
-            }
-
-            files.push(...subFiles);
-            folders.push(...subFolders);
-            completed++;
-            if (completed === folders.length) {
-              callback(null, files, folders, seasonFolders);
-            }
-          });
-
-          seasonFolders.push(folder);
-        });
-      } else {
-        callback(null, files, folders, []);
-      }
-    });
-  };
 
   // Obtener todos los archivos de video en la carpeta de la serie y sus subcarpetas
   getVideoFiles(seriesFolderPath, (err, files, folders, seasons, videos) => {
@@ -144,16 +143,6 @@ app.get("/series/:name/:season", (req, res) => {
   });
 });
 
-function construirRutaDelVideo(seriesName, season, videoName) {
-  // Ruta base de las series
-  const seriesPath = "H:/Series";
-
-  // Construir la ruta completa del video
-  const videoPath = path.join(seriesPath, seriesName, season, videoName);
-
-  return videoPath;
-}
-
 // Ruta para mostrar un video específico
 app.get("/series/:name/:season/:video", (req, res) => {
   // Obtén la información necesaria para construir la ruta del video
@@ -162,12 +151,11 @@ app.get("/series/:name/:season/:video", (req, res) => {
   const videoName = req.params.video;
 
   // Construye la ruta completa del video
-  const videoPath = construirRutaDelVideo(seriesName, season, videoName);
+  const videoPath = path.join(seriesPath, seriesName, season, videoName);
 
   // Renderiza la vista "video.ejs" y pasa la variable videoPath
   res.render("video", { videoPath });
 });
-
 const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
