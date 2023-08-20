@@ -9,6 +9,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      webSecurity: false, // Permite contenido local
+      allowFileAccess: true, // Permite acceso a archivos locales
     },
   });
 

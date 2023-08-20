@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-// Ruta de la carpeta de series
-const seriesPath = "H:/Series";
+const seriesPath = "H:/Series"; // Ruta de la carpeta de series
 
 // FN: getVideoFiles
 function getVideoFiles(folderPath, callback) {
@@ -93,7 +92,10 @@ function getVideo(req, res) {
   const seasonFolderPath = path.join(seriesFolderPath, season);
   const videoPath = path.join(seasonFolderPath, videoName);
 
-  res.render("video", { videoPath });
+  // Reemplaza cualquier barra diagonal inversa duplicada con una sola barra
+  const sanitizedVideoPath = videoPath.replace(/\\/g, "/");
+
+  res.render("video", { videoPath: sanitizedVideoPath });
 }
 
 module.exports = {
