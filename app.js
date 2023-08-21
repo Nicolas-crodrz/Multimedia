@@ -89,7 +89,18 @@ app.get("/", (req, res) => {
             }
           });
 
-          res.render("index", { seriesNames, seriesCoverPaths });
+          // Modificar los nombres de las series si tienen más de 22 caracteres
+          const seriesNamesModified = seriesNames.map((name) => {
+            if (name.length > 22) {
+              return name.substring(0, 15) + "...";
+            }
+            return name;
+          });
+
+          res.render("index", {
+            seriesNames: seriesNamesModified,
+            seriesCoverPaths,
+          });
         }
       });
     }
@@ -129,7 +140,6 @@ app.get("/series/:name", (req, res) => {
     }
   });
 });
-
 
 // Ruta para mostrar los videos de una temporada
 app.get("/series/:name/:season", (req, res) => {

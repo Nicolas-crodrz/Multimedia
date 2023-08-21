@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 50vh;
   /* Cambiado a min-height */
   background-color: #f0f0f0;
   /* Color de fondo para mostrar el scroll */
