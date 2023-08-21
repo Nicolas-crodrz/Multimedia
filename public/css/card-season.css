@@ -1,0 +1,55 @@
+/* Estilos para centrar horizontalmente el contenido y habilitar el scroll */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Cambiado a min-height */
+  background-color: #f0f0f0;
+  /* Color de fondo para mostrar el scroll */
+}
+
+.seasons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* Centrar horizontalmente las temporadas */
+  max-width: 1200px;
+  /* Máximo ancho para evitar que se vuelva demasiado ancho */
+  margin: 0 auto;
+  /* Centrar el contenido horizontalmente */
+  padding: 20px;
+  /* Agregar espacio entre temporadas */
+}
+
+.card-container {
+  width: 300px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-season {
+  padding: 15px;
+  height: 50vh;
+  text-align: center;
+}
+
+.season-cover img {
+  border-radius: 10px;
+  width: 100%;
+  max-height: 40vh;
+  object-fit: cover;
+  border-bottom: 1px solid #ccc;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}

@@ -1,42 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Películas y Series</title>
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link
-      rel="shortcut icon"
-      href="/public/img/favicon/favicon.ico"
-      type="image/x-icon"
-    />
-  </head>
-  <body>
-    <header>
-      <h1>Películas y Series</h1>
-      <div class="search-container">
-        <input
-          type="text"
-          id="searchInput"
-          name="query"
-          placeholder="Buscar serie..."
-        />
-      </div>
-    </header>
-    <main class="container">
-      <div class="card-grid" id="seriesContainer">
-        <!-- Sección para mostrar las series -->
-        <% for (let i = 0; i < seriesNames.length; i++) { %>
-        <a href="/series/<%= seriesNames[i] %>" class="card serie-card">
-          <img
-            class="portada"
-            src="<%= seriesCoverPaths[i] %>"
-            alt="<%= seriesNames[i] %>"
-          />
-          <p class="button-6" role="button"><%=seriesNames[i]%></p>
-        </a>
-        <% } %>
-      </div>
-    </main>
-    <script src="/js/client.js"></script>
-  </body>
-</html>
+<%- include('partials/_head') %>
+<body>
+  <header>
+    <h1>Películas y Series</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" name="query" placeholder="Buscar serie..."/>
+    </div>
+  </header>
+  <main class="container">
+    <div class="card-grid" id="seriesContainer">
+      <!-- Sección para mostrar las series -->
+      <% for (let i = 0; i < seriesNames.length; i++) { %>
+      <a href="/series/<%= seriesNames[i] %>" class="card serie-card">
+        <img class="portada" src="<%= seriesCoverPaths[i] %>" alt="<%= seriesNames[i] %>"/>
+        <p class="button-6" role="button"><%=seriesNames[i]%></p>
+      </a>
+      <% } %>
+    </div>
+  </main>
+  <%- include('partials/_footer') %>
+</body>

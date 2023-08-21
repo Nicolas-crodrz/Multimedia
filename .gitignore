@@ -1,1 +1,11 @@
+# Ignorar la carpeta portadas y su contenido
+/public/portadas/*
+
+# Ignorar el archivo portadas.json
+/portadas.json
+
+# Ignorar la carpeta img y su contenido
+/public/img/*
+
+# Ignorar node_modules
 /node_modules

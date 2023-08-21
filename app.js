@@ -107,10 +107,29 @@ app.get("/series/:name", (req, res) => {
       console.error(err);
       res.status(500).send("Error al leer la carpeta de la serie");
     } else {
-      res.render("series", { seriesName, files, folders, seasons, videos });
+      // Cargar las rutas completas de las portadas desde un archivo JSON
+      fs.readFile("portadas.json", "utf8", (err, data) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error al leer el archivo de portadas");
+        } else {
+          const portadas = JSON.parse(data).series;
+          const seriesCoverPaths = portadas.map((portada) => portada.ruta);
+
+          res.render("series", {
+            seriesName,
+            files,
+            folders,
+            seasons,
+            videos,
+            seriesCoverPaths, // Pasar las rutas de las portadas a la vista
+          });
+        }
+      });
     }
   });
 });
+
 
 // Ruta para mostrar los videos de una temporada
 app.get("/series/:name/:season", (req, res) => {
@@ -157,6 +176,7 @@ app.get("/series/:name/:season/:video", (req, res) => {
   res.render("video", { videoPath });
 });
 const port = 3000;
+
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
