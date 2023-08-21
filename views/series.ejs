@@ -1,35 +1,30 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/css/series.css" />
-    <link
-      rel="shortcut icon"
-      href="/public/img/favicon/favicon.ico"
-      type="image/x-icon"
-    />
-    <title><%= seriesName %></title>
-  </head>
-  <body>
-    <h1><%= seriesName %></h1>
+<%- include('partials/_head') %>
+<h1><%= seriesName %></h1>
 
-    <% if (seasons && seasons.length > 0) { %>
-    <div class="card-grid">
-      <% for (let i = 0; i < seasons.length; i++) { %>
-      <div class="card">
-        <div class="card-header">Temporada: <%= seasons[i] %></div>
-        <div class="card-body">
-          <a
-            href="/series/<%= encodeURIComponent(seriesName) %>/<%= encodeURIComponent(seasons[i]) %>"
-            class="btn btn-primary"
-            >Ver videos</a
-          >
+<% if (seasons && seasons.length > 0) { %>
+<div class="page-container">
+  <div class="seasons-container">
+    <% for (let i = 0; i < seasons.length; i++) { %>
+    <div class="card-container">
+      <div class="card-season">
+        <div class="season-cover">
+          <!-- Generar la URL de la imagen de portada -->
+          <img
+            src="/portadas/<%= seriesName %><%= i === 0 ? '' : i + 1 %>.png"
+            alt="Portada de la temporada"
+          />
         </div>
+        <h3><%= seasons[i] %></h3>
+        <a
+          href="/series/<%= encodeURIComponent(seriesName) %>/<%= encodeURIComponent(seasons[i]) %>"
+          class="btn btn-primary"
+          >Ver videos</a
+        >
       </div>
-      <% } %>
     </div>
-    <% } else { %>
-    <p>No hay temporadas disponibles para esta serie.</p>
     <% } %>
-  </body>
-</html>
+  </div>
+</div>
+<% } else { %>
+<p>No hay temporadas disponibles para esta serie.</p>
+<% } %> <%- include('partials/_footer') %>
