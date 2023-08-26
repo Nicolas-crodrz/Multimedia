@@ -18,7 +18,7 @@
         <a
           href="/series/<%= encodeURIComponent(seriesName) %>/<%= encodeURIComponent(seasons[i]) %>"
           class="btn btn-primary"
-          >Ver videos</a
+          >Ver capítulos</a
         >
       </div>
     </div>
@@ -26,5 +26,21 @@
   </div>
 </div>
 <% } else { %>
-<p>No hay temporadas disponibles para esta serie.</p>
+<div id="popup" class="popup" style="display: block">
+  <div class="popup-content">
+    <span class="close" id="closePopup">&times;</span>
+    <div class="popup-message">
+      <div class="popup-text">
+        <h3 style="text-align: center">Lo sentimos!!!</h3>
+        <p style="text-align: center">
+          No hay temporadas disponibles para esta serie.
+        </p>
+        <p style="text-align: center">Estamos trabajando en ello.</p>
+        <div class="popup-image-left">
+          <img src="/img/gif/work.gif" alt="GIF a la izquierda" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <% } %> <%- include('partials/_footer') %>
