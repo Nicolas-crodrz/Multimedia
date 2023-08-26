@@ -1,18 +1,25 @@
 <%- include('partials/_head') %>
-    <h1><%= seriesName %><%= season %></h1>
-    <% if (videos && videos.length > 0) { %>
-    <div class="video-list">
-      <% for (let i = 0; i < videos.length; i++) { %>
-      <div class="video-card">
-        <p><%= videos[i].name %></p>
-        <a
-          href="/series/<%= seriesName %>/<%= season %>/<%= encodeURIComponent(videos[i].name) %>"
-          >Ver video</a
-        >
-      </div>
-      <% } %>
-    </div>
-    <% } else { %>
-    <p>No hay videos disponibles para esta temporada.</p>
-    <% } %>
-    <%- include('partials/_footer') %>
+
+<h1 class="season-header"><%= seriesName %><%= season %></h1>
+
+<% if (videos && videos.length > 0) { %>
+<div class="videos-container">
+  <% for (let i = 0; i < videos.length; i++) { %>
+  <div class="video-card">
+    <p class="video-title"><%= videos[i].name %></p>
+    <a
+      href="/series/<%= seriesName %>/<%= season %>/<%= encodeURIComponent(videos[i].name) %>"
+      class="btn btn-primary"
+      >Ver Capítulo</a
+    >
+  </div>
+  <% } %>
+</div>
+<% } else { %>
+<div id="popup" class="popup" style="display: block">
+  <div class="popup-content">
+    <span class="close" id="closePopup">&times;</span>
+    <p class="no-videos">No hay videos disponibles para esta temporada.</p>
+  </div>
+</div>
+<% } %> <%- include('partials/_footer') %>
