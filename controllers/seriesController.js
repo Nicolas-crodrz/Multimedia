@@ -1,106 +1,129 @@
 const fs = require("fs");
 const path = require("path");
+const seriesModel = require("../models/seriesModel");
 
-const seriesPath = "H:/Series"; // Ruta de la carpeta de series
+// Ruta de la carpeta de series
+const seriesPath = "H:/Series";
 
-// FN: getVideoFiles
-function getVideoFiles(folderPath, callback) {
-  fs.readdir(folderPath, { withFileTypes: true }, (err, entries) => {
-    if (err) {
-      callback(err, null);
-      return;
-    }
+const seriesController = {
+  getIndexPage: (req, res) => {
+    // Obtener la lista de series disponibles
+    fs.readdir(seriesPath, { withFileTypes: true }, (err, entries) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error al leer la carpeta de series");
+      } else {
+        const seriesFolders = entries.filter((entry) => entry.isDirectory());
+        const seriesNames = seriesFolders.map((folder) => folder.name);
 
-    const videos = entries
-      .filter((entry) => entry.isFile())
-      .map((entry) => {
-        const videoName = entry.name;
-        const videoPath = path.join(folderPath, videoName);
+        // Cargar las rutas completas de las portadas desde un archivo JSON
+        fs.readFile("portadas.json", "utf8", (err, data) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send("Error al leer el archivo de portadas");
+          } else {
+            const portadas = JSON.parse(data).series;
 
-        return {
-          name: videoName,
-          path: videoPath,
-        };
-      });
+            // Verificar si existen portadas para todas las series
+            const seriesCoverPaths = seriesNames.map((seriesName) => {
+              const portada = portadas.find((p) => p.nombre === seriesName);
+              if (portada) {
+                return portada.ruta;
+              } else {
+                // Ruta de imagen de reemplazo si no se encuentra la portada
+                return "/images/default-cover.png";
+              }
+            });
+            res.render("index", {
+              seriesNames: seriesNames,
+              seriesCoverPaths: seriesCoverPaths,
+            });
+          }
+        });
+      }
+    });
+  },
 
-    callback(null, videos);
-  });
-}
+  getSeriesPage: (req, res) => {
+    const seriesName = req.params.name;
+    const seriesFolderPath = path.join(seriesPath, seriesName);
 
-// FN: getAllSeries
-function getAllSeries(req, res) {
-  fs.readdir(seriesPath, { withFileTypes: true }, (err, entries) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error al leer la carpeta de series");
-    } else {
-      const seriesFolders = entries.filter((entry) => entry.isDirectory());
-      const seriesNames = seriesFolders.map((folder) => folder.name);
-      const seriesCoverPaths = seriesNames.map((seriesName) =>
-        path.join(seriesPath, ".PORTADAS", `${seriesName}.png`)
-      );
+    // Obtener todos los archivos de video en la carpeta de la serie y sus subcarpetas
+    seriesModel.getVideoFiles(
+      seriesFolderPath,
+      (err, files, folders, seasons, videos) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error al leer la carpeta de la serie");
+        } else {
+          // Cargar las rutas completas de las portadas desde un archivo JSON
+          fs.readFile("portadas.json", "utf8", (err, data) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send("Error al leer el archivo de portadas");
+            } else {
+              const portadas = JSON.parse(data).series;
+              const seriesCoverPaths = portadas.map((portada) => portada.ruta);
 
-      res.render("index", { seriesNames, seriesCoverPaths });
-    }
-  });
-}
+              res.render("series", {
+                seriesName,
+                files,
+                folders,
+                seasons,
+                videos,
+                seriesCoverPaths, // Pasar las rutas de las portadas a la vista
+              });
+            }
+          });
+        }
+      }
+    );
+  },
 
-// FN: getSeriesDetails
-function getSeriesDetails(req, res) {
-  const seriesName = req.params.name;
-  const seriesFolderPath = path.join(seriesPath, seriesName, "Temporadas");
-  const seriesCoverPath = path.join(
-    seriesPath,
-    ".PORTADAS",
-    `${seriesName}.png`
-  );
+  getSeasonPage: (req, res) => {
+    const seriesName = req.params.name;
+    const season = req.params.season;
+    const seasonFolderPath = path.join(seriesPath, seriesName, season);
 
-  getVideoFiles(seriesFolderPath, (err, videos) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error al leer la carpeta de la serie");
-    } else {
-      res.render("series", {
-        seriesName,
-      });
-    }
-  });
-}
+    // Leer los archivos de video en la carpeta de la temporada
+    fs.readdir(seasonFolderPath, (err, entries) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error al leer la carpeta de la temporada");
+      } else {
+        // Filtrar solo los archivos de video
+        const videoFiles = entries.filter((entry) => {
+          const fileExtension = path.extname(entry).toLowerCase();
+          return [".mkv", ".mp4", ".webm"].includes(fileExtension);
+        });
 
-// FN: getSeasonVideos
-function getSeasonVideos(req, res) {
-  const seriesName = req.params.name;
-  const season = req.params.season;
-  const seasonFolderPath = path.join(seriesPath, seriesName, season);
+        // Obtener información de los videos (nombre y miniatura) si es necesario
+        const videos = videoFiles.map((file) => {
+          return {
+            name: file,
+            thumbnail: "/ruta/a/la/miniatura", // Reemplaza con la ruta a la miniatura del video
+          };
+        });
 
-  getVideoFiles(seasonFolderPath, (err, videos) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error al leer la carpeta de la temporada");
-    } else {
-      res.render("Temporadas", { seriesName, season, videos });
-    }
-  });
-}
+        res.render("temporada", { seriesName, season, videos });
+      }
+    });
+  },
 
-// FN: getVideo
-function getVideo(req, res) {
-  const seriesName = req.params.name;
-  const season = req.params.season;
-  const videoName = req.params.video;
-  const seriesFolderPath = path.join(seriesPath, seriesName, "Temporadas");
-  const seasonFolderPath = path.join(seriesFolderPath, season);
-  const videoPath = path.join(seasonFolderPath, videoName);
+  getVideoPage: (req, res) => {
+    // Obtén la información necesaria para construir la ruta del video
+    const seriesName = req.params.name;
+    const season = req.params.season;
+    const videoName = req.params.video;
 
-  // Reemplaza cualquier barra diagonal inversa duplicada con una sola barra
-  const sanitizedVideoPath = videoPath.replace(/\\/g, "/");
+    // Construye la ruta completa del video
+    const videoPath = path.join(seriesPath, seriesName, season, videoName);
 
-  res.render("video", { videoPath: sanitizedVideoPath });
-}
+    // Renderiza la vista "video.ejs" y pasa la variable videoPath
+    res.render("video", { videoPath });
+  },
 
-module.exports = {
-  getAllSeries,
-  getSeriesDetails,
-  getSeasonVideos,
-  getVideo,
+  // Agregar más funciones de controlador según sea necesario
 };
+
+module.exports = seriesController;

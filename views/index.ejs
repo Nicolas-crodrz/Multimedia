@@ -3,7 +3,12 @@
   <header>
     <h1>Películas y Series</h1>
     <div class="search-container">
-      <input type="text" id="searchInput" name="query" placeholder="Buscar serie..."/>
+      <input
+        type="text"
+        id="searchInput"
+        name="query"
+        placeholder="Buscar serie..."
+      />
     </div>
   </header>
   <main class="container">
@@ -11,8 +16,15 @@
       <!-- Sección para mostrar las series -->
       <% for (let i = 0; i < seriesNames.length; i++) { %>
       <a href="/series/<%= seriesNames[i] %>" class="card serie-card">
-        <img class="portada" src="<%= seriesCoverPaths[i] %>" alt="<%= seriesNames[i] %>"/>
-        <p class="button-6" role="button"><%=seriesNames[i]%></p>
+        <img
+          class="portada"
+          src="<%= seriesCoverPaths[i] %>"
+          alt="<%= seriesNames[i] %>"
+        />
+        <p class="button-6" role="button">
+          <% const name = seriesNames[i]; %> <% if (name.length > 22) { %> <%=
+          name.substring(0, 22) + "..." %> <% } else { %> <%= name %> <% } %>
+        </p>
       </a>
       <% } %>
     </div>
